@@ -6,7 +6,7 @@ import { Module } from "@nestjs/common";
     entities: ['../entry/model'],
     dbName: 'palisade',
     type: 'mongo',
-    clientUrl: 'INSERT MONGO URL HERE'
+    clientUrl: process.env.MONGO_URI
   })],
 })
 export class AppModule {}
