@@ -13,7 +13,7 @@ import { ObjectId } from "@mikro-orm/mongodb";
 import { ObjectType, Field, Int, ID, GraphQLISODateTime } from "@nestjs/graphql";
 import { Category } from "../enums/category.enum";
 import { Priority } from "../enums/priority.enum";
-import { Account } from "./acount.entity";
+import { Account } from "./account.entity";
 
 @ObjectType()
 @Entity()
