@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { EntryService } from './entry.service';
-import { Entry } from './model/entry.entity';
+import { Entry } from './entities/entry.entity';
 import { CreateEntryInput } from './dto/create-entry.input';
 import { UpdateEntryInput } from './dto/update-entry.input';
 

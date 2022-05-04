@@ -9,8 +9,9 @@ import {
 } from "@mikro-orm/core";
 import { ObjectId } from "@mikro-orm/mongodb";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Entry } from "src/modules/entry/entities/entry.entity";
 import { UserRole } from "../enums/user-role.enum";
-import { Entry } from "./entry.entity";
+
 
 @ObjectType()
 @Entity()

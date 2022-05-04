@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { EntryService } from './entry.service';
 import { EntryResolver } from './entry.resolver';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Entry } from './model/entry.entity';
-import { Account } from './model/account.entity';
+import { Entry } from './entities/entry.entity';
+
 
 @Module({
-  imports: [MikroOrmModule.forFeature([Entry, Account])],
+  imports: [MikroOrmModule.forFeature([Entry])],
   providers: [EntryResolver, EntryService]
 })
 export class EntryModule { }
