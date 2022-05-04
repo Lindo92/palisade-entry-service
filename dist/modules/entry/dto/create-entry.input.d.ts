@@ -1,5 +1,3 @@
-import { Collection, IdentifiedReference } from '@mikro-orm/core';
-import { Account } from 'src/modules/account/entities/account.entity';
 import { Category } from '../enums/category.enum';
 import { Priority } from '../enums/priority.enum';
 export declare class CreateEntryInput {
@@ -11,9 +9,9 @@ export declare class CreateEntryInput {
     area?: string;
     product?: string;
     toBeFixed?: string;
-    developer?: Collection<Account, unknown>;
-    reporter: IdentifiedReference<Account>;
-    isReadyForTesting?: boolean;
+    assignedDeveloperIds?: string[];
+    creatorAccountId: string;
+    isReadyForTesting: boolean;
     resolutionStatus?: string;
     closed: boolean;
 }

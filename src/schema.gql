@@ -1,0 +1,278 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Account {
+  """The first name of the account holder."""
+  firstname: String!
+
+  """The last name of the account holder."""
+  lastname: String!
+
+  """The email of the account holder."""
+  email: String!
+
+  """The password of the account holder."""
+  password: String!
+
+  """
+  The role of the account holder. Accaptable values are: USER, DEVELOPER and ADMIN.
+  """
+  role: UserRole!
+}
+
+enum UserRole {
+  ADMIN
+  DEVELOPER
+  USER
+}
+
+type Entry {
+  """
+  The title of the entry, should be concise and hint at what the issue is about.
+  """
+  title: String!
+
+  """
+  The description of the entry, a longer description of the issue, laying out more details.
+  """
+  description: String
+
+  """
+  How prioritized the issue should be, can be LOW, MEDIUM, HIGH or CRITICAL.
+  """
+  priority: Priority
+
+  """
+  The category that the entry belongs to, can be FRONTEND, BACKEND, or DOCUMENTATION.
+  """
+  category: Category
+
+  """An array of URIs of images relevant to the entry."""
+  images: [String!]
+
+  """
+  A closer description of which area of the application the entry pertains to.
+  """
+  area: String
+
+  """The name of the product that the entry pertains to."""
+  product: String
+
+  """
+  A promise set by the developer assigned to the entry, should be the number of the version of the app when the entry should be resolved.
+  """
+  toBeFixed: String
+
+  """
+  An array of account Ids which in turn references the developer or developers assigned to the issue.
+  """
+  assignedDeveloperIds: [Account!]
+
+  """A id reference to the account that created the entry."""
+  creatorAccountId: Account!
+
+  """
+  A flag to see if a issue is ready for testing or not, false by default.
+  """
+  isReadyForTesting: Boolean!
+
+  """
+  The resultion status of the issue, examples are that the issue was ignored, is fixed, or that it is fixed but with caveats.
+  """
+  resolutionStatus: String
+
+  """
+  A boolean for seeing if the issue has been closed or not. Default value is false.
+  """
+  closed: Boolean!
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum Category {
+  FRONTEND
+  DOCUMENTATION
+  BACKEND
+}
+
+type Query {
+  account(id: Int!): Account!
+  entry(id: ID!): Entry!
+}
+
+type Mutation {
+  createAccount(createAccountInput: CreateAccountInput!): Account!
+  updateAccount(updateAccountInput: UpdateAccountInput!): Account!
+  removeAccount(id: Int!): Account!
+  createEntry(createEntryInput: CreateEntryInput!): Entry!
+  updateEntry(updateEntryInput: UpdateEntryInput!): Entry!
+  removeEntry(id: Int!): Entry!
+}
+
+input CreateAccountInput {
+  """The first name of the account holder."""
+  firstname: String!
+
+  """The last name of the account holder."""
+  lastname: String!
+
+  """The email of the account holder."""
+  email: String!
+
+  """The password of the account holder."""
+  password: String!
+
+  """
+  The role of the account holder. Accaptable values are: USER, DEVELOPER and ADMIN.
+  """
+  role: UserRole!
+}
+
+input UpdateAccountInput {
+  """The first name of the account holder."""
+  firstname: String
+
+  """The last name of the account holder."""
+  lastname: String
+
+  """The email of the account holder."""
+  email: String
+
+  """The password of the account holder."""
+  password: String
+
+  """
+  The role of the account holder. Accaptable values are: USER, DEVELOPER and ADMIN.
+  """
+  role: UserRole
+  id: String!
+}
+
+input CreateEntryInput {
+  """
+  The title of the entry, should be concise and hint at what the issue is about.
+  """
+  title: String!
+
+  """
+  The description of the entry, a longer description of the issue, laying out more details.
+  """
+  description: String
+
+  """
+  How prioritized the issue should be, can be LOW, MEDIUM, HIGH or CRITICAL.
+  """
+  priority: Priority
+
+  """
+  The category that the entry belongs to, can be FRONTEND, BACKEND, or DOCUMENTATION.
+  """
+  category: Category
+
+  """An array of URIs of images relevant to the entry."""
+  images: [String!]
+
+  """
+  A closer description of which area of the application the entry pertains to.
+  """
+  area: String
+
+  """The name of the product that the entry pertains to."""
+  product: String
+
+  """
+  A promise set by the developer assigned to the entry, should be the number of the version of the app when the entry should be resolved.
+  """
+  toBeFixed: String
+
+  """
+  An array of account Ids which in turn references the developer or developers assigned to the issue.
+  """
+  assignedDeveloperIds: [String!]
+
+  """A id reference to the account that created the entry."""
+  creatorAccountId: String!
+
+  """
+  A flag to see if a issue is ready for testing or not, false by default.
+  """
+  isReadyForTesting: Boolean = false
+
+  """
+  The resultion status of the issue, examples are that the issue was ignored, is fixed, or that it is fixed but with caveats.
+  """
+  resolutionStatus: String
+
+  """
+  A boolean for seeing if the issue has been closed or not. Default value is false.
+  """
+  closed: Boolean = false
+}
+
+input UpdateEntryInput {
+  """
+  The title of the entry, should be concise and hint at what the issue is about.
+  """
+  title: String
+
+  """
+  The description of the entry, a longer description of the issue, laying out more details.
+  """
+  description: String
+
+  """
+  How prioritized the issue should be, can be LOW, MEDIUM, HIGH or CRITICAL.
+  """
+  priority: Priority
+
+  """
+  The category that the entry belongs to, can be FRONTEND, BACKEND, or DOCUMENTATION.
+  """
+  category: Category
+
+  """An array of URIs of images relevant to the entry."""
+  images: [String!]
+
+  """
+  A closer description of which area of the application the entry pertains to.
+  """
+  area: String
+
+  """The name of the product that the entry pertains to."""
+  product: String
+
+  """
+  A promise set by the developer assigned to the entry, should be the number of the version of the app when the entry should be resolved.
+  """
+  toBeFixed: String
+
+  """
+  An array of account Ids which in turn references the developer or developers assigned to the issue.
+  """
+  assignedDeveloperIds: [String!]
+
+  """A id reference to the account that created the entry."""
+  creatorAccountId: String
+
+  """
+  A flag to see if a issue is ready for testing or not, false by default.
+  """
+  isReadyForTesting: Boolean = false
+
+  """
+  The resultion status of the issue, examples are that the issue was ignored, is fixed, or that it is fixed but with caveats.
+  """
+  resolutionStatus: String
+
+  """
+  A boolean for seeing if the issue has been closed or not. Default value is false.
+  """
+  closed: Boolean = false
+  id: String!
+}
