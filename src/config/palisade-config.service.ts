@@ -10,10 +10,6 @@ export class PalisadeConfigService {
   constructor(private configservice: ConfigService) { }
 
   get mongoURI(): string {
-    return this.configservice.get('palisade.MONGO_URI')
-  }
-
-  get dbName(): string {
-    return this.configservice.get('palisade.DB_NAME')
+    return this.configservice.get<string>('palisade.MONGO_URI')
   }
 }

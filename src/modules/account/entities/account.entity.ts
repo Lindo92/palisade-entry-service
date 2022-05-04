@@ -1,49 +1,31 @@
-import {
-  Collection,
-  Entity,
-  Enum,
-  OneToMany,
-  PrimaryKey,
-  Property,
-  SerializedPrimaryKey,
-} from "@mikro-orm/core";
-import { ObjectId } from "@mikro-orm/mongodb";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Entry } from "src/modules/entry/entities/entry.entity";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { UserRole } from "../enums/user-role.enum";
 
-
+export type AccountDocument = Account & Document
 @ObjectType()
-@Entity()
+@Schema({timestamps: true})
 export class Account {
-  @PrimaryKey()
-  public _id!: ObjectId;
+  @Prop({required: true})
+  @Field({description: 'The first name of the account holder.'})
+  firstname!: string;
 
-  @Field(type => ID)
-  @SerializedPrimaryKey()
-  public id!: string;
+  @Prop({required: true})
+  @Field({description: 'The last name of the account holder.'})
+  lastname!: string;
 
-  @Field()
-  @Property()
-  public firstname!: string;
+  @Prop({required: true})
+  @Field({description: 'The email of the account holder.'})
+  email!: string;
 
-  @Field()
-  @Property()
-  public lastname!: string;
+  @Prop({required: true})
+  @Field({description: 'The password of the account holder.'})
+  password!: string
 
-  @Field()
-  @Property()
-  public email!: string;
+  @Prop({required: true})
+  @Field(type => UserRole, {description: 'The role of the account holder. Accaptable values are: USER, DEVELOPER and ADMIN.'})
+  role!: UserRole;
 
-  @Field(type => UserRole)
-  @Enum(() => UserRole)
-  public role!: UserRole;
-
-  @Field(type => [Entry], {nullable: true})
-  @OneToMany(() => Entry, (entry) => entry.id)
-  assignedEntries = new Collection<Entry>(this);
-
-  @Field(type => [Entry], {nullable: true})
-  @OneToMany(() => Entry, (entry) => entry.id)
-  reportedEntries = new Collection<Entry>(this);
 }
+
+export const AccountSchema = SchemaFactory.createForClass(Account);

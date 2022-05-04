@@ -5,5 +5,4 @@ import { registerAs } from '@nestjs/config';
  */
 export default registerAs('palisade', () => ({
   MONGO_URI: process.env.MONGO_URI,
-  DB_NAME: process.env.DB_NAME,
 }));

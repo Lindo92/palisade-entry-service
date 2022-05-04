@@ -1,39 +1,30 @@
-import { EntityRepository } from '@mikro-orm/core';
-import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateEntryInput } from './dto/create-entry.input';
 import { UpdateEntryInput } from './dto/update-entry.input';
-import { Entry } from './entities/entry.entity';
+import { Entry, EntryDocument } from './entities/entry.entity';
 
 @Injectable()
 export class EntryService {
-  constructor(
-    @InjectRepository(Entry)
-    private readonly entryRepository: EntityRepository<Entry>,
-  ) { }
-
+constructor(@InjectModel(Entry.name) private readonly entryModel: Model<EntryDocument>){}
   create(createEntryInput: CreateEntryInput) {
-    return this.entryRepository.create(createEntryInput);
+    return this.entryModel.create(createEntryInput);
   }
 
   findAll() {
-    return this.entryRepository.findAll()
+    return this.entryModel.find()
   }
 
   findOne(id: string) {
-
-    const findOneOption = {
-      id: id
-    }
-
-    return this.entryRepository.findOne(findOneOption);
+    return this.entryModel.findById(id);
   }
 
   update(id: string, updateEntryInput: UpdateEntryInput) {
-    return this.entryRepository.nativeUpdate(id, updateEntryInput)
+    return this.entryModel.updateOne({_id: id}, updateEntryInput)
   }
 
   remove(id: string) {
-    return this.entryRepository.nativeDelete(id);
+    return this.entryModel.deleteOne({_id: id});
   }
 }
