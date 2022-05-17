@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { UpdateResult } from "mongodb";
 import { FilterQuery, Model } from "mongoose";
 import { CreateAccountInput } from "./dto/create-account.input";
+import { UpdateAccountRawDto } from "./dto/update-account-raw.dto";
 import { UpdateAccountInput } from "./dto/update-account.input";
 import { Account, AccountDocument } from "./entities/account.entity";
 
@@ -11,7 +12,7 @@ export class AccountService {
   constructor(
     @InjectModel(Account.name)
     private readonly accountModel: Model<AccountDocument>
-  ) {}
+  ) { }
 
   async create(createAccountInput: CreateAccountInput) {
     return await this.accountModel.create(createAccountInput);
@@ -40,7 +41,7 @@ export class AccountService {
     return await this.accountModel.findByIdAndUpdate(id, updateAccountInput);
   }
 
-  async updateRaw(body: Record<string, unknown>): Promise<UpdateResult> {
+  async updateRaw(body: UpdateAccountRawDto): Promise<UpdateResult> {
     return await this.accountModel.updateOne(
       body.filter,
       body.updateAccountInput

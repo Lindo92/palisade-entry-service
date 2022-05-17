@@ -62,7 +62,7 @@ type Entry {
   """
   A promise set by the developer assigned to the entry, should be the number of the version of the app when the entry should be resolved.
   """
-  toBeFixed: String
+  toBeFixedByVersion: String
 
   """
   An array of account Ids which in turn references the developer or developers assigned to the issue.
@@ -189,7 +189,7 @@ input CreateEntryInput {
   """
   A promise set by the developer assigned to the entry, should be the number of the version of the app when the entry should be resolved.
   """
-  toBeFixed: String
+  toBeFixedByVersion: String
 
   """
   An array of account Ids which in turn references the developer or developers assigned to the issue.
@@ -250,7 +250,7 @@ input UpdateEntryInput {
   """
   A promise set by the developer assigned to the entry, should be the number of the version of the app when the entry should be resolved.
   """
-  toBeFixed: String
+  toBeFixedByVersion: String
 
   """
   An array of account Ids which in turn references the developer or developers assigned to the issue.
