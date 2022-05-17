@@ -1,30 +1,52 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { CreateEntryInput } from './dto/create-entry.input';
-import { UpdateEntryInput } from './dto/update-entry.input';
-import { Entry, EntryDocument } from './entities/entry.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { FilterQuery, Model } from "mongoose";
+import { CreateEntryInput } from "./dto/create-entry.input";
+import { UpdateEntryInput } from "./dto/update-entry.input";
+import { Entry, EntryDocument } from "./entities/entry.entity";
 
 @Injectable()
 export class EntryService {
-constructor(@InjectModel(Entry.name) private readonly entryModel: Model<EntryDocument>){}
-  create(createEntryInput: CreateEntryInput) {
-    return this.entryModel.create(createEntryInput);
+  constructor(
+    @InjectModel(Entry.name) private readonly entryModel: Model<EntryDocument>
+  ) {}
+
+  async create(createEntryInput: CreateEntryInput): Promise<Entry> {
+    return await this.entryModel.create(createEntryInput);
   }
 
-  findAll() {
-    return this.entryModel.find()
+  async find(): Promise<Entry[]> {
+    return await this.entryModel.find();
   }
 
-  findOne(id: string) {
-    return this.entryModel.findById(id);
+  async findRaw(filter: FilterQuery<EntryDocument>): Promise<Entry[]> {
+    return await this.entryModel.find(filter);
   }
 
-  update(id: string, updateEntryInput: UpdateEntryInput) {
-    return this.entryModel.updateOne({_id: id}, updateEntryInput)
+  async findOne(id: string): Promise<Entry> {
+    return await this.entryModel.findById(id);
   }
 
-  remove(id: string) {
-    return this.entryModel.deleteOne({_id: id});
+  async findOneRaw(filter: FilterQuery<EntryDocument>): Promise<Entry[]> {
+    return await this.entryModel.findOne(filter);
+  }
+
+  async update(id: string, updateEntryInput: UpdateEntryInput): Promise<Entry> {
+    return await this.entryModel.findByIdAndUpdate(id, updateEntryInput);
+  }
+
+  async updateRaw(body: Record<string, unknown>): Promise<unknown> {
+    return await this.entryModel.updateOne(
+      body.filter,
+      body.updateAccountInput
+    );
+  }
+
+  async delete(id: string): Promise<unknown> {
+    return await this.entryModel.findByIdAndDelete(id);
+  }
+
+  async deleteRaw(filter: FilterQuery<Entry>): Promise<unknown> {
+    return await this.entryModel.findOneAndDelete(filter);
   }
 }

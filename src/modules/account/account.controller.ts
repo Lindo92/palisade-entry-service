@@ -13,7 +13,7 @@ import { UpdateAccountInput } from "./dto/update-account.input";
 import { Account } from "./entities/account.entity";
 
 @Controller("accounts")
-export class AccountsController {
+export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
   @Post("/create")
@@ -32,7 +32,7 @@ export class AccountsController {
   }
 
   @Get("/find-one")
-  findOne(@Query() id: string): Promise<Account> {
+  findOne(@Query("id") id: string): Promise<Account> {
     return this.accountService.findOne(id);
   }
 
@@ -43,7 +43,7 @@ export class AccountsController {
 
   @Patch("/update")
   async update(
-    @Query() id: string,
+    @Query("id") id: string,
     @Body() updateAccountInput: UpdateAccountInput
   ): Promise<Account> {
     return await this.update(id, updateAccountInput);
@@ -55,7 +55,7 @@ export class AccountsController {
   }
 
   @Delete("/delete")
-  async delete(@Query() id: string): Promise<unknown> {
+  async delete(@Query("id") id: string): Promise<unknown> {
     return await this.accountService.delete(id);
   }
 
