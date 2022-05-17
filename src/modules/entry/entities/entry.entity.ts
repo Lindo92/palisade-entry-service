@@ -1,9 +1,6 @@
 import {
   ObjectType,
   Field,
-  Int,
-  ID,
-  GraphQLISODateTime,
 } from "@nestjs/graphql";
 import { Category } from "../enums/category.enum";
 import { Priority } from "../enums/priority.enum";
@@ -11,7 +8,7 @@ import { Account } from "../../account/entities/account.entity";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { boolean } from "joi";
+
 
 export type EntryDocument = Entry & Document;
 @ObjectType()
@@ -133,7 +130,7 @@ export class Entry {
   })
   @Field({ defaultValue: false, description: 'A boolean for seeing if the issue has been closed or not. Default value is false.' })
   @Prop({ required: true, default: false })
-  closed!: boolean;
+  isClosed!: boolean;
 }
 
 export const EntrySchema = SchemaFactory.createForClass(Entry);

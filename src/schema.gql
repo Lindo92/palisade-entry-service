@@ -85,7 +85,7 @@ type Entry {
   """
   A boolean for seeing if the issue has been closed or not. Default value is false.
   """
-  closed: Boolean!
+  isClosed: Boolean!
 }
 
 enum Priority {
@@ -212,7 +212,7 @@ input CreateEntryInput {
   """
   A boolean for seeing if the issue has been closed or not. Default value is false.
   """
-  closed: Boolean = false
+  isClosed: Boolean = false
 }
 
 input UpdateEntryInput {
@@ -273,6 +273,6 @@ input UpdateEntryInput {
   """
   A boolean for seeing if the issue has been closed or not. Default value is false.
   """
-  closed: Boolean = false
+  isClosed: Boolean = false
   id: String!
 }

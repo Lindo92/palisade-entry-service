@@ -9,9 +9,9 @@ import {
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AccountService } from "./account.service";
-import { CreateAccountInput } from "./dto/create-account.input";
+import { UpsertAccountInput } from "./dto/upsert-account.input";
+import { FindAccountRawDto } from "./dto/find-account-raw.dto";
 import { UpdateAccountRawDto } from "./dto/update-account-raw.dto";
-import { UpdateAccountInput } from "./dto/update-account.input";
 import { Account } from "./entities/account.entity";
 
 @ApiTags('accounts')
@@ -33,11 +33,12 @@ export class AccountsController {
     description: 'Validation failed or something went wrong with the creation of your account, Please see error.',
   })
   @ApiBody({
-    description: 'The data needed to create an account an object of type CreateAccountInput.'
+    description: 'The data needed to create an account an object of type UpsertAccountInput.',
+    type: () => UpsertAccountInput
   })
   @Post("/create")
-  create(@Body() createAccountInput: CreateAccountInput): Promise<Account> {
-    return this.accountService.create(createAccountInput);
+  create(@Body() upsertAccountInput: UpsertAccountInput): Promise<Account> {
+    return this.accountService.create(upsertAccountInput);
   }
 
   @ApiOperation({
@@ -72,10 +73,11 @@ export class AccountsController {
     description: 'Validation failed or something went wrong with the query, most likely the filter was constructed incorrectly, Please see error.',
   })
   @ApiBody({
-    description: 'Body must contain a filter object with the key one wants to find accounts by and the value.'
+    description: 'Body must contain a filter object with the key one wants to find accounts by and the value.',
+    type: () => FindAccountRawDto
   })
   @Get("/find-raw")
-  findRaw(@Body() body: Record<string, unknown>): Promise<Account[]> {
+  findRaw(@Body() body: FindAccountRawDto): Promise<Account[]> {
     return this.accountService.findRaw(body.filter);
   }
 
@@ -115,11 +117,12 @@ export class AccountsController {
     description: 'Validation failed or something went wrong with the query, most likely the filter was constructed incorrectly, Please see error.',
   })
   @ApiBody({
-    description: 'Body must contain a filter object with the key one wants to find accounts by and the value.'
+    description: 'Body must contain a filter object with the key one wants to find accounts by and the value.',
+    type: () => FindAccountRawDto
   })
   @Get("/find-one-raw")
-  async findOneRaw(@Body() body: Record<string, any>): Promise<Account> {
-    return await this.findOneRaw(body.filter);
+  async findOneRaw(@Body() body: FindAccountRawDto): Promise<Account> {
+    return await this.accountService.findOneRaw(body.filter);
   }
 
   @ApiOperation({
@@ -140,14 +143,15 @@ export class AccountsController {
     description: 'The id of the account to be updated.'
   })
   @ApiBody({
-    description: 'An updateAccountInput object'
+    description: 'An updateAccountInput object',
+    type: () => UpsertAccountInput
   })
   @Patch("/update")
   async update(
     @Query("id") id: string,
-    @Body() updateAccountInput: UpdateAccountInput
+    @Body() upsertAccountInput: UpsertAccountInput
   ): Promise<Account> {
-    return await this.update(id, updateAccountInput);
+    return await this.update(id, upsertAccountInput);
   }
 
   @ApiOperation({
@@ -164,7 +168,8 @@ export class AccountsController {
     description: 'Validation failed or something went wrong with the query, most likely the filter was constructed incorrectly, Please see error.',
   })
   @ApiBody({
-    description: 'Body must contain a filter object with the key one wants to find accounts by and the value, aswell as a updateAccountInput object.'
+    description: 'Body must contain a filter object with the key one wants to find accounts by and the value, aswell as a updateAccountInput object.',
+    type: UpdateAccountRawDto
   })
   @Patch("/update-raw")
   async updateRaw(@Body() body: UpdateAccountRawDto): Promise<unknown> {

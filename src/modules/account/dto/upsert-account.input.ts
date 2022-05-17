@@ -1,9 +1,9 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from '../enums/user-role.enum';
 
 @InputType()
-export class CreateAccountInput {
+export class UpsertAccountInput {
   @ApiProperty({
     description: 'The first name of the account holder.',
     example: 'John',
@@ -28,7 +28,11 @@ export class CreateAccountInput {
   @Field({ description: 'The email of the account holder.' })
   email!: string;
 
-  @ApiHideProperty()
+  @ApiProperty({
+    description: 'The secure password of the account holder.',
+    example: '!mYSecUr3Pas5w0rd_',
+    type: String,
+  })
   @Field({ description: 'The password of the account holder.' })
   password!: string
 

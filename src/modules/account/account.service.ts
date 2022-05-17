@@ -2,10 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { UpdateResult } from "mongodb";
 import { FilterQuery, Model } from "mongoose";
-import { CreateAccountInput } from "./dto/create-account.input";
+import { UpsertAccountInput } from "./dto/upsert-account.input";
 import { UpdateAccountRawDto } from "./dto/update-account-raw.dto";
-import { UpdateAccountInput } from "./dto/update-account.input";
 import { Account, AccountDocument } from "./entities/account.entity";
+import { UpdateAccountInput } from "./dto/update-account.input";
 
 @Injectable()
 export class AccountService {
@@ -14,8 +14,8 @@ export class AccountService {
     private readonly accountModel: Model<AccountDocument>
   ) { }
 
-  async create(createAccountInput: CreateAccountInput) {
-    return await this.accountModel.create(createAccountInput);
+  async create(upcertAccountInput: UpsertAccountInput) {
+    return await this.accountModel.create(upcertAccountInput);
   }
 
   async find(): Promise<Account[]> {
@@ -30,15 +30,15 @@ export class AccountService {
     return await this.accountModel.findById(id);
   }
 
-  async findOneRaw(filter: FilterQuery<AccountDocument>): Promise<Account[]> {
+  async findOneRaw(filter: FilterQuery<AccountDocument>): Promise<Account> {
     return await this.accountModel.findOne(filter);
   }
 
   async update(
     id: string,
-    updateAccountInput: UpdateAccountInput
+    upcertAccountInput: UpdateAccountInput
   ): Promise<Account> {
-    return await this.accountModel.findByIdAndUpdate(id, updateAccountInput);
+    return await this.accountModel.findByIdAndUpdate(id, upcertAccountInput);
   }
 
   async updateRaw(body: UpdateAccountRawDto): Promise<UpdateResult> {
