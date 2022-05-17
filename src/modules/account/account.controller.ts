@@ -97,7 +97,7 @@ export class AccountsController {
     description: 'The id of the account to be fetched.'
   })
   @Get("/find-one")
-  findOne(@Query() id: string): Promise<Account> {
+  findOne(@Query("id") id: string): Promise<Account> {
     return this.accountService.findOne(id);
   }
 
@@ -144,7 +144,7 @@ export class AccountsController {
   })
   @Patch("/update")
   async update(
-    @Query() id: string,
+    @Query("id") id: string,
     @Body() updateAccountInput: UpdateAccountInput
   ): Promise<Account> {
     return await this.update(id, updateAccountInput);
@@ -188,7 +188,7 @@ export class AccountsController {
     description: 'the id of the account to be deleted.'
   })
   @Delete("/delete")
-  async delete(@Query() id: string): Promise<unknown> {
+  async delete(@Query("id") id: string): Promise<unknown> {
     return await this.accountService.delete(id);
   }
 

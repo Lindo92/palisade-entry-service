@@ -1,4 +1,10 @@
-import { ObjectType, Field, Int, ID, GraphQLISODateTime } from "@nestjs/graphql";
+import {
+  ObjectType,
+  Field,
+  Int,
+  ID,
+  GraphQLISODateTime,
+} from "@nestjs/graphql";
 import { Category } from "../enums/category.enum";
 import { Priority } from "../enums/priority.enum";
 import { Account } from "../../account/entities/account.entity";
@@ -11,7 +17,6 @@ export type EntryDocument = Entry & Document;
 @ObjectType()
 @Schema({ timestamps: true })
 export class Entry {
-
 
   @ApiProperty({
     description: 'The title of the entry, should be concise and hint at what the issue is about.',
