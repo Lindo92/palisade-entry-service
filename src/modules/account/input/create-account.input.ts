@@ -4,6 +4,9 @@ import { UserRole } from '../enums/user-role.enum';
 @InputType()
 export class CreateAccountInput {
 
+  @Field({ description: 'The username of the account holder.' })
+  username!: string;
+
   @Field({ description: 'The first name of the account holder.' })
   firstname!: string;
 

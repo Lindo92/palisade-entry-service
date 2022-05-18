@@ -7,6 +7,16 @@ export type AccountDocument = Account & Document
 @ObjectType()
 @Schema({ timestamps: true })
 export class Account {
+  
+  @ApiProperty({
+    description: 'The username of the account holder.',
+    example: 'JohnDoe99',
+    type: String,
+  })
+  @Prop({ required: true, unique: true })
+  @Field({ description: 'The username of the account holder.' })
+  username!: string;
+
   @ApiProperty({
     description: 'The first name of the account holder.',
     example: 'John',

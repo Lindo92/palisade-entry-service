@@ -12,4 +12,8 @@ export class PalisadeConfigService {
   get mongoURI(): string {
     return this.configservice.get<string>('palisade.MONGO_URI')
   }
+
+  get secretKey(): string {
+    return this.configservice.get<string>('palisade.SECRET_KEY')
+  }
 }

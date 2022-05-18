@@ -5,6 +5,13 @@ import { UserRole } from "../enums/user-role.enum";
 export class CreateAccountDto {
 
   @ApiProperty({
+    description: 'The username of the account holder.',
+    example: 'JohnDoe99',
+    type: String,
+  })
+  username!: string;
+
+  @ApiProperty({
     description: 'The first name of the account holder.',
     example: 'John',
     type: String,

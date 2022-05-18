@@ -8,6 +8,7 @@ import {
   Query,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Public } from "../authentication/decorator/public.decorator";
 import { AccountService } from "./account.service";
 import { CreateAccountDto } from "./dto/create-account.dto";
 import { FindAccountRawDto } from "./dto/find-account-raw.dto";
@@ -37,6 +38,7 @@ export class AccountsController {
     description: 'The data needed to create an account an object of type CreateAccountDto.',
     type: () => CreateAccountDto
   })
+  @Public()
   @Post("/create")
   create(@Body() createAccountDto: CreateAccountDto): Promise<Account> {
     return this.accountService.create(createAccountDto);
