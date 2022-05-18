@@ -7,11 +7,12 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AccountService } from "./account.service";
-import { UpsertAccountInput } from "./dto/upsert-account.input";
+import { CreateAccountDto } from "./dto/create-account.dto";
 import { FindAccountRawDto } from "./dto/find-account-raw.dto";
 import { UpdateAccountRawDto } from "./dto/update-account-raw.dto";
+import { UpdateAccountDto } from "./dto/update-account.dto";
 import { Account } from "./entities/account.entity";
 
 @ApiTags('accounts')
@@ -33,12 +34,12 @@ export class AccountsController {
     description: 'Validation failed or something went wrong with the creation of your account, Please see error.',
   })
   @ApiBody({
-    description: 'The data needed to create an account an object of type UpsertAccountInput.',
-    type: () => UpsertAccountInput
+    description: 'The data needed to create an account an object of type CreateAccountDto.',
+    type: () => CreateAccountDto
   })
   @Post("/create")
-  create(@Body() upsertAccountInput: UpsertAccountInput): Promise<Account> {
-    return this.accountService.create(upsertAccountInput);
+  create(@Body() createAccountDto: CreateAccountDto): Promise<Account> {
+    return this.accountService.create(createAccountDto);
   }
 
   @ApiOperation({
@@ -48,7 +49,7 @@ export class AccountsController {
   @ApiResponse({
     status: 200,
     type: [Account],
-    description: `A successful response with all available accounts..`,
+    description: `A successful response with all available accounts.`,
   })
   @ApiResponse({
     status: 500,
@@ -143,15 +144,15 @@ export class AccountsController {
     description: 'The id of the account to be updated.'
   })
   @ApiBody({
-    description: 'An updateAccountInput object',
-    type: () => UpsertAccountInput
+    description: 'An updateAccountDto object',
+    type: () => UpdateAccountDto
   })
   @Patch("/update")
   async update(
     @Query("id") id: string,
-    @Body() upsertAccountInput: UpsertAccountInput
+    @Body() updateAccountDto: UpdateAccountDto
   ): Promise<Account> {
-    return await this.update(id, upsertAccountInput);
+    return await this.update(id, updateAccountDto);
   }
 
   @ApiOperation({
@@ -210,10 +211,11 @@ export class AccountsController {
     description: 'Validation failed or something went wrong with the query, most likely the filter was constructed incorrectly, Please see error.',
   })
   @ApiBody({
-    description: 'Body must contain a filter object with the key one wants to find accounts by and the value.'
+    description: 'Body must contain a filter object with the key one wants to delete accounts by and the value.',
+    type: () => FindAccountRawDto
   })
   @Delete("/delete-raw")
-  async deleteRaw(@Body() body: Record<string, unknown>): Promise<unknown> {
+  async deleteRaw(@Body() body: FindAccountRawDto): Promise<unknown> {
     return await this.accountService.deleteRaw(body.filter);
   }
 }

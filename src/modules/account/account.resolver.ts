@@ -1,8 +1,8 @@
 import { Resolver, Query, Mutation, Args, Int } from "@nestjs/graphql";
 import { AccountService } from "./account.service";
 import { Account } from "./entities/account.entity";
-import { UpsertAccountInput } from "./dto/upsert-account.input";
-import { UpdateAccountInput } from "./dto/update-account.input";
+import { CreateAccountInput } from "./input/create-account.input";
+import { UpdateAccountInput } from "./input/update-account.input";
 
 
 @Resolver(() => Account)
@@ -11,9 +11,9 @@ export class AccountResolver {
 
   @Mutation(() => Account)
   createAccount(
-    @Args("createAccountInput") upsertAccountInput: UpsertAccountInput
+    @Args("createAccountInput") createAccountInput: CreateAccountInput
   ) {
-    return this.accountService.create(upsertAccountInput);
+    return this.accountService.create(createAccountInput);
   }
 
   @Query(() => [Account], { name: "account" })

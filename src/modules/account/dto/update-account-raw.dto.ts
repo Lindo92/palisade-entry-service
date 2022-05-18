@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { UpsertAccountInput } from "./upsert-account.input";
+import { UpdateAccountDto } from "./update-account.dto";
 
 
 export class UpdateAccountRawDto {
@@ -12,7 +12,7 @@ export class UpdateAccountRawDto {
 
   @ApiProperty({
     description: 'An Update Account Dto.',
-    type: () => UpsertAccountInput,
+    type: () => UpdateAccountDto,
   })
-  updateAccountInput: UpsertAccountInput
+  updateAccountInput: UpdateAccountDto
 }

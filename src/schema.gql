@@ -135,23 +135,24 @@ input CreateAccountInput {
 }
 
 input UpdateAccountInput {
+  id: String!
+
   """The first name of the account holder."""
-  firstname: String
+  firstname: String!
 
   """The last name of the account holder."""
-  lastname: String
+  lastname: String!
 
   """The email of the account holder."""
-  email: String
+  email: String!
 
   """The password of the account holder."""
-  password: String
+  password: String!
 
   """
   The role of the account holder. Accaptable values are: USER, DEVELOPER and ADMIN.
   """
-  role: UserRole
-  id: String!
+  role: UserRole!
 }
 
 input CreateEntryInput {
@@ -216,10 +217,12 @@ input CreateEntryInput {
 }
 
 input UpdateEntryInput {
+  id: String!
+
   """
   The title of the entry, should be concise and hint at what the issue is about.
   """
-  title: String
+  title: String!
 
   """
   The description of the entry, a longer description of the issue, laying out more details.
@@ -257,9 +260,6 @@ input UpdateEntryInput {
   """
   assignedDeveloperIds: [String!]
 
-  """A id reference to the account that created the entry."""
-  creatorAccountId: String
-
   """
   A flag to see if a issue is ready for testing or not, false by default.
   """
@@ -274,5 +274,4 @@ input UpdateEntryInput {
   A boolean for seeing if the issue has been closed or not. Default value is false.
   """
   isClosed: Boolean = false
-  id: String!
 }
