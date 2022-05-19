@@ -5,5 +5,7 @@ import { registerAs } from '@nestjs/config';
  */
 export default registerAs('palisade', () => ({
   MONGO_URI: process.env.MONGO_URI,
-  SECRET_KEY: process.env.SECRET_KEY
+  JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
+  JWT_EXPIRATION_TIME: process.env.JWT_EXPIRATION_TIME,
+
 }));

@@ -1,9 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { FilterQuery, Model } from "mongoose";
-import { CreateEntryInput } from "./input/create-entry.input";
 import { UpdateEntryRawDto } from "./dto/update-entry-raw.dto";
-import { UpdateEntryInput } from "./input/update-entry.input";
 import { Entry, EntryDocument } from "./entities/entry.entity";
 import { CreateEntryDto } from "./dto/create-entry.dto";
 import { UpdateEntryDto } from "./dto/update-entry.dto";
@@ -14,8 +12,8 @@ export class EntryService {
     @InjectModel(Entry.name) private readonly entryModel: Model<EntryDocument>
   ) { }
 
-  async create(createEntryInput: CreateEntryInput | CreateEntryDto): Promise<Entry> {
-    return await this.entryModel.create(createEntryInput);
+  async create(createEntryDto: CreateEntryDto): Promise<Entry> {
+    return await this.entryModel.create(createEntryDto);
   }
 
   async find(): Promise<Entry[]> {
@@ -34,14 +32,14 @@ export class EntryService {
     return await this.entryModel.findOne(filter);
   }
 
-  async update(id: string, updateEntryInput: UpdateEntryInput | UpdateEntryDto): Promise<Entry> {
-    return await this.entryModel.findByIdAndUpdate(id, updateEntryInput);
+  async update(id: string, updateEntryDto: UpdateEntryDto): Promise<Entry> {
+    return await this.entryModel.findByIdAndUpdate(id, updateEntryDto);
   }
 
   async updateRaw(body: UpdateEntryRawDto): Promise<unknown> {
     return await this.entryModel.updateOne(
       body.filter,
-      body.updateAccountInput
+      body.updateAccountDto
     );
   }
 

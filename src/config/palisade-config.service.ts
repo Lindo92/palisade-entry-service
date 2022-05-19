@@ -14,6 +14,6 @@ export class PalisadeConfigService {
   }
 
   get secretKey(): string {
-    return this.configservice.get<string>('palisade.SECRET_KEY')
+    return this.configservice.get<string>('palisade.JWT_SECRET_KEY')
   }
 }

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { UserRole } from "../enums/user-role.enum";
+import { Role } from "../enums/role.enum";
 
 
 export class CreateAccountDto {
@@ -42,7 +42,7 @@ export class CreateAccountDto {
   @ApiProperty({
     description: 'The account holders role in regards to the palisade api.',
     example: `'user', 'admin' or 'developer'.`,
-    enum: UserRole
+    enum: [Role]
   })
-  role!: UserRole;
+  roles!: Role[];
 }

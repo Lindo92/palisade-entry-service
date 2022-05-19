@@ -1,20 +1,18 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
-import { UserRole } from "../enums/user-role.enum";
+import { Role } from "../enums/role.enum";
 
 export type AccountDocument = Account & Document
-@ObjectType()
+
 @Schema({ timestamps: true })
 export class Account {
-  
+
   @ApiProperty({
     description: 'The username of the account holder.',
     example: 'JohnDoe99',
     type: String,
   })
   @Prop({ required: true, unique: true })
-  @Field({ description: 'The username of the account holder.' })
   username!: string;
 
   @ApiProperty({
@@ -23,7 +21,6 @@ export class Account {
     type: String,
   })
   @Prop({ required: true })
-  @Field({ description: 'The first name of the account holder.' })
   firstname!: string;
 
   @ApiProperty({
@@ -32,7 +29,6 @@ export class Account {
     type: String,
   })
   @Prop({ required: true })
-  @Field({ description: 'The last name of the account holder.' })
   lastname!: string;
 
   @ApiProperty({
@@ -41,22 +37,19 @@ export class Account {
     type: String,
   })
   @Prop({ required: true })
-  @Field({ description: 'The email of the account holder.' })
   email!: string;
 
   @ApiHideProperty()
   @Prop({ required: true })
-  @Field({ description: 'The password of the account holder.' })
   password!: string
 
   @ApiProperty({
-    description: 'The account holders role in regards to the palisade api.',
+    description: 'The account holders roles in regards to the palisade api.',
     example: `'user', 'admin' or 'developer'.`,
-    enum: UserRole
+    enum: [Role]
   })
   @Prop({ required: true })
-  @Field(type => UserRole, { description: 'The role of the account holder. Accaptable values are: USER, DEVELOPER and ADMIN.' })
-  role!: UserRole;
+  roles!: Role[];
 
 }
 

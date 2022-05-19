@@ -14,5 +14,5 @@ export class UpdateAccountRawDto {
     description: 'An Update Account Dto.',
     type: () => UpdateAccountDto,
   })
-  updateAccountInput: UpdateAccountDto
+  updateAccountDto: UpdateAccountDto
 }

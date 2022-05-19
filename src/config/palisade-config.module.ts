@@ -13,7 +13,8 @@ import palisadeConfiguration from "./palisade.configuration";
       load: [palisadeConfiguration],
       validationSchema: Joi.object({
         MONGO_URI: Joi.string().required(),
-        SECRET_KEY: Joi.string().required(),
+        JWT_SECRET_KEY: Joi.string().required(),
+        JWT_EXPIRATION_TIME: Joi.string().required(),
       }),
     })
   ],

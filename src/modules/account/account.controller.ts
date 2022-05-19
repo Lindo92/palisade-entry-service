@@ -4,45 +4,24 @@ import {
   Delete,
   Get,
   Patch,
-  Post,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Public } from "../authentication/decorator/public.decorator";
+import JwtAuthenticationGuard from "../authentication/guard/jwt-auth.guard";
+import RoleGuard from "../authentication/guard/role-auth.guard";
 import { AccountService } from "./account.service";
-import { CreateAccountDto } from "./dto/create-account.dto";
 import { FindAccountRawDto } from "./dto/find-account-raw.dto";
 import { UpdateAccountRawDto } from "./dto/update-account-raw.dto";
 import { UpdateAccountDto } from "./dto/update-account.dto";
 import { Account } from "./entities/account.entity";
+import { Role } from "./enums/role.enum";
+
 
 @ApiTags('accounts')
 @Controller("accounts")
 export class AccountsController {
   constructor(private readonly accountService: AccountService) { }
-
-  @ApiOperation({
-    summary: 'Create Account',
-    description: 'This endpoint is used for creating an account.',
-  })
-  @ApiResponse({
-    status: 200,
-    type: Account,
-    description: `A successful response with the created accounts data.`,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Validation failed or something went wrong with the creation of your account, Please see error.',
-  })
-  @ApiBody({
-    description: 'The data needed to create an account an object of type CreateAccountDto.',
-    type: () => CreateAccountDto
-  })
-  @Public()
-  @Post("/create")
-  create(@Body() createAccountDto: CreateAccountDto): Promise<Account> {
-    return this.accountService.create(createAccountDto);
-  }
 
   @ApiOperation({
     summary: 'Find All Accounts',
@@ -57,6 +36,7 @@ export class AccountsController {
     status: 500,
     description: 'Something went wrong while trying to get the array of accounts, Please see error.',
   })
+  @UseGuards(RoleGuard(Role.Admin))
   @Get("/find")
   find(): Promise<Account[]> {
     return this.accountService.find();
@@ -79,6 +59,7 @@ export class AccountsController {
     description: 'Body must contain a filter object with the key one wants to find accounts by and the value.',
     type: () => FindAccountRawDto
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Get("/find-raw")
   findRaw(@Body() body: FindAccountRawDto): Promise<Account[]> {
     return this.accountService.findRaw(body.filter);
@@ -101,6 +82,7 @@ export class AccountsController {
     name: 'id',
     description: 'The id of the account to be fetched.'
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Get("/find-one")
   findOne(@Query("id") id: string): Promise<Account> {
     return this.accountService.findOne(id);
@@ -123,6 +105,7 @@ export class AccountsController {
     description: 'Body must contain a filter object with the key one wants to find accounts by and the value.',
     type: () => FindAccountRawDto
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Get("/find-one-raw")
   async findOneRaw(@Body() body: FindAccountRawDto): Promise<Account> {
     return await this.accountService.findOneRaw(body.filter);
@@ -149,6 +132,7 @@ export class AccountsController {
     description: 'An updateAccountDto object',
     type: () => UpdateAccountDto
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Patch("/update")
   async update(
     @Query("id") id: string,
@@ -174,6 +158,7 @@ export class AccountsController {
     description: 'Body must contain a filter object with the key one wants to find accounts by and the value, aswell as a updateAccountInput object.',
     type: UpdateAccountRawDto
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Patch("/update-raw")
   async updateRaw(@Body() body: UpdateAccountRawDto): Promise<unknown> {
     return await this.accountService.updateRaw(body);
@@ -195,6 +180,7 @@ export class AccountsController {
     name: 'id',
     description: 'the id of the account to be deleted.'
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Delete("/delete")
   async delete(@Query("id") id: string): Promise<unknown> {
     return await this.accountService.delete(id);
@@ -216,6 +202,7 @@ export class AccountsController {
     description: 'Body must contain a filter object with the key one wants to delete accounts by and the value.',
     type: () => FindAccountRawDto
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Delete("/delete-raw")
   async deleteRaw(@Body() body: FindAccountRawDto): Promise<unknown> {
     return await this.accountService.deleteRaw(body.filter);

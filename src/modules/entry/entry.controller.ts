@@ -6,8 +6,10 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
+import JwtAuthenticationGuard from "../authentication/guard/jwt-auth.guard";
 import { CreateEntryDto } from "./dto/create-entry.dto";
 import { FindEntryRawDto } from "./dto/find-entry-raw.dto";
 import { UpdateEntryRawDto } from "./dto/update-entry-raw.dto";
@@ -37,6 +39,7 @@ export class EntryController {
     description: 'The data needed to create an entry an object of type CreateEntryDto.',
     type: () => CreateEntryDto
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Post("/create")
   create(@Body() CreateEntryDto: CreateEntryDto): Promise<Entry> {
     return this.entryService.create(CreateEntryDto);
@@ -55,6 +58,7 @@ export class EntryController {
     status: 500,
     description: 'Something went wrong while trying to get the array of entries, Please see error.',
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Get("/find")
   find(): Promise<Entry[]> {
     return this.entryService.find();
@@ -77,6 +81,7 @@ export class EntryController {
     description: 'Body must contain a filter object with the key one wants to find entries by and the value.',
     type: () => FindEntryRawDto
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Get("/find-raw")
   findRaw(@Body() body: FindEntryRawDto): Promise<Entry[]> {
     return this.entryService.findRaw(body.filter);
@@ -99,6 +104,7 @@ export class EntryController {
     name: 'id',
     description: 'The id of the account to be fetched.'
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Get("/find-one")
   findOne(@Query("id") id: string): Promise<Entry> {
     return this.entryService.findOne(id);
@@ -121,6 +127,7 @@ export class EntryController {
     description: 'Body must contain a filter object with the key one wants to find entries by and the value.',
     type: () => FindEntryRawDto
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Get("/find-one-raw")
   async findOneRaw(@Body() body: FindEntryRawDto): Promise<Entry> {
     return await this.entryService.findOneRaw(body.filter);
@@ -147,6 +154,7 @@ export class EntryController {
     description: 'An updateEntryDto object',
     type: () => UpdateEntryDto
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Patch("/update")
   async update(
     @Query() id: string,
@@ -172,6 +180,7 @@ export class EntryController {
     description: 'Body must contain a filter object with the key one wants to find entries by and the value, aswell as a updateEntryDto object.',
     type: UpdateEntryRawDto
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Patch("/update-raw")
   async updateRaw(@Body() body: UpdateEntryRawDto): Promise<unknown> {
     return await this.entryService.updateRaw(body);
@@ -193,6 +202,7 @@ export class EntryController {
     name: 'id',
     description: 'the id of the entry to be deleted.'
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Delete("/delete")
   async delete(@Query("id") id: string): Promise<unknown> {
     return await this.entryService.delete(id);
@@ -214,6 +224,7 @@ export class EntryController {
     description: 'Body must contain a filter object with the key one wants to delete entries by and the value.',
     type: () => FindEntryRawDto
   })
+  @UseGuards(JwtAuthenticationGuard)
   @Delete("/delete-raw")
   async deleteRaw(@Body() body: FindEntryRawDto): Promise<unknown> {
     return await this.entryService.deleteRaw(body.filter);
