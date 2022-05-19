@@ -1,7 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { FilterQuery, Model } from "mongoose";
-import { UpdateEntryRawDto } from "./dto/update-entry-raw.dto";
 import { Entry, EntryDocument } from "./entities/entry.entity";
 import { CreateEntryDto } from "./dto/create-entry.dto";
 import { UpdateEntryDto } from "./dto/update-entry.dto";
@@ -36,18 +35,46 @@ export class EntryService {
     return await this.entryModel.findByIdAndUpdate(id, updateEntryDto);
   }
 
-  async updateRaw(body: UpdateEntryRawDto): Promise<unknown> {
-    return await this.entryModel.updateOne(
-      body.filter,
-      body.updateAccountDto
-    );
+  async updateAssingedDevelopers(id: string, updateEntryDto: UpdateEntryDto): Promise<Entry> {
+    return await this.entryModel.findByIdAndUpdate(id, { assignedDeveloperIds: updateEntryDto.assignedDeveloperIds })
+
+  }
+  async updateYourOwn(entryId: string, _id: string, updateEntryDto: UpdateEntryDto): Promise<any> {
+    const check = false;
+    const yourEntries: any = await this.findRaw({ creatorAccountId: _id });
+    try {
+      yourEntries.forEach(entry => {
+        if (entry._id === entryId) {
+          return this.update(entryId, updateEntryDto)
+        }
+        else {
+          throw new HttpException('You can only update your own entries.', HttpStatus.BAD_REQUEST);
+        }
+      });
+    } catch (error) {
+      throw new HttpException('You do not have any created entries to update.', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async deleteYourOwn(entryId: string, _id: string): Promise<any> {
+    const check = false;
+    const yourEntries: any = await this.findRaw({ creatorAccountId: _id });
+    try {
+      yourEntries.forEach(entry => {
+        if (entry._id === entryId) {
+          return this.delete(entryId);
+        }
+        else {
+          throw new HttpException('You can only delete your own entries.', HttpStatus.BAD_REQUEST);
+        }
+      });
+    } catch (error) {
+      throw new HttpException('You do not have any created entries to delete.', HttpStatus.BAD_REQUEST);
+    }
   }
 
   async delete(id: string): Promise<unknown> {
     return await this.entryModel.findByIdAndDelete(id);
   }
 
-  async deleteRaw(filter: FilterQuery<Entry>): Promise<unknown> {
-    return await this.entryModel.findOneAndDelete(filter);
-  }
 }

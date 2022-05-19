@@ -1,8 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { UpdateResult } from "mongodb";
 import { FilterQuery, Model } from "mongoose";
-import { UpdateAccountRawDto } from "./dto/update-account-raw.dto";
 import { Account, AccountDocument } from "./entities/account.entity";
 import { CreateAccountDto } from "./dto/create-account.dto";
 import { UpdateAccountDto } from "./dto/update-account.dto";
@@ -41,18 +39,12 @@ export class AccountService {
     return await this.accountModel.findByIdAndUpdate(id, updateAccountDto);
   }
 
-  async updateRaw(body: UpdateAccountRawDto): Promise<UpdateResult> {
-    return await this.accountModel.updateOne(
-      body.filter,
-      body.updateAccountDto
-    );
+  async updateRole(id: string, updateAccountDto: UpdateAccountDto): Promise<Account> {
+    return await this.accountModel.findByIdAndUpdate(id, { roles: updateAccountDto.roles });
   }
 
   async delete(id: string): Promise<unknown> {
     return await this.accountModel.findByIdAndDelete(id);
   }
 
-  async deleteRaw(filter: FilterQuery<AccountDocument>): Promise<unknown> {
-    return await this.accountModel.findOneAndDelete(filter);
-  }
 }

@@ -5,14 +5,14 @@ import {
   Get,
   Patch,
   Query,
+  Req,
   UseGuards,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
-import JwtAuthenticationGuard from "../authentication/guard/jwt-auth.guard";
 import RoleGuard from "../authentication/guard/role-auth.guard";
+import RequestWithUser from "../authentication/interface/requestWithUser.interface";
 import { AccountService } from "./account.service";
 import { FindAccountRawDto } from "./dto/find-account-raw.dto";
-import { UpdateAccountRawDto } from "./dto/update-account-raw.dto";
 import { UpdateAccountDto } from "./dto/update-account.dto";
 import { Account } from "./entities/account.entity";
 import { Role } from "./enums/role.enum";
@@ -59,7 +59,7 @@ export class AccountsController {
     description: 'Body must contain a filter object with the key one wants to find accounts by and the value.',
     type: () => FindAccountRawDto
   })
-  @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(RoleGuard(Role.Admin))
   @Get("/find-raw")
   findRaw(@Body() body: FindAccountRawDto): Promise<Account[]> {
     return this.accountService.findRaw(body.filter);
@@ -82,7 +82,7 @@ export class AccountsController {
     name: 'id',
     description: 'The id of the account to be fetched.'
   })
-  @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(RoleGuard(Role.Admin))
   @Get("/find-one")
   findOne(@Query("id") id: string): Promise<Account> {
     return this.accountService.findOne(id);
@@ -105,15 +105,15 @@ export class AccountsController {
     description: 'Body must contain a filter object with the key one wants to find accounts by and the value.',
     type: () => FindAccountRawDto
   })
-  @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(RoleGuard(Role.Admin))
   @Get("/find-one-raw")
   async findOneRaw(@Body() body: FindAccountRawDto): Promise<Account> {
     return await this.accountService.findOneRaw(body.filter);
   }
 
   @ApiOperation({
-    summary: 'Update Account By Id',
-    description: 'This endpoint is used for updating an account that matches supplied id.',
+    summary: 'Update Account Role By Id',
+    description: 'This endpoint is used for updating the role of an account that matches supplied id.',
   })
   @ApiResponse({
     status: 200,
@@ -132,36 +132,43 @@ export class AccountsController {
     description: 'An updateAccountDto object',
     type: () => UpdateAccountDto
   })
-  @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(RoleGuard(Role.Admin))
   @Patch("/update")
-  async update(
+  async updateRole(
     @Query("id") id: string,
     @Body() updateAccountDto: UpdateAccountDto
   ): Promise<Account> {
-    return await this.update(id, updateAccountDto);
+    return await this.accountService.updateRole(id, updateAccountDto);
   }
 
   @ApiOperation({
-    summary: 'Update Account Raw',
-    description: 'This endpoint is used for Updating a single account that match supplied filter. It will update the first account it finds that matches the filter with given information, if this endpoint is used it should be used with causion, if you update by a key that\'s not unique it\'s extremly unpredictable.',
+    summary: 'Update Your Account By Id',
+    description: 'This endpoint is used for updating users account.',
   })
   @ApiResponse({
     status: 200,
     type: Account,
-    description: `A successful response with new updated account that matches filter.`,
+    description: `A successful update of account, respone will contain updated account.`,
   })
   @ApiResponse({
     status: 400,
-    description: 'Validation failed or something went wrong with the query, most likely the filter was constructed incorrectly, Please see error.',
+    description: 'Validation failed or something went wrong with the query, Please see error.',
+  })
+  @ApiQuery({
+    name: 'id',
+    description: 'The id of the account to be updated.'
   })
   @ApiBody({
-    description: 'Body must contain a filter object with the key one wants to find accounts by and the value, aswell as a updateAccountInput object.',
-    type: UpdateAccountRawDto
+    description: 'An updateAccountDto object',
+    type: () => UpdateAccountDto
   })
-  @UseGuards(JwtAuthenticationGuard)
-  @Patch("/update-raw")
-  async updateRaw(@Body() body: UpdateAccountRawDto): Promise<unknown> {
-    return await this.accountService.updateRaw(body);
+  @UseGuards(RoleGuard(Role.User))
+  @Patch("/update-your-account")
+  async updateYourOwn(
+    @Req() request: RequestWithUser,
+    @Body() updateAccountDto: UpdateAccountDto
+  ): Promise<Account> {
+    return await this.accountService.update(request.user._id, updateAccountDto);
   }
 
   @ApiOperation({
@@ -180,31 +187,10 @@ export class AccountsController {
     name: 'id',
     description: 'the id of the account to be deleted.'
   })
-  @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(RoleGuard(Role.Admin))
   @Delete("/delete")
   async delete(@Query("id") id: string): Promise<unknown> {
     return await this.accountService.delete(id);
   }
 
-  @ApiOperation({
-    summary: 'Delete Account Raw',
-    description: 'This endpoint is used for deleting a single account that match supplied filter. It will delete the first account it finds that matches the filter, if this endpoint is used it should be used with causion, if you delete by a key that\'s not unique it\'s extremly unpredictable.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: `The delete query ran successfully.`,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Validation failed or something went wrong with the query, most likely the filter was constructed incorrectly, Please see error.',
-  })
-  @ApiBody({
-    description: 'Body must contain a filter object with the key one wants to delete accounts by and the value.',
-    type: () => FindAccountRawDto
-  })
-  @UseGuards(JwtAuthenticationGuard)
-  @Delete("/delete-raw")
-  async deleteRaw(@Body() body: FindAccountRawDto): Promise<unknown> {
-    return await this.accountService.deleteRaw(body.filter);
-  }
 }
