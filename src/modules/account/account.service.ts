@@ -13,23 +13,46 @@ export class AccountService {
   ) { }
 
   async create(createAccountDto: CreateAccountDto) {
-    return await this.accountModel.create(createAccountDto);
+    const account = await this.accountModel.create(createAccountDto);
+    account.password = undefined;
+    return account;
   }
 
   async find(): Promise<Account[]> {
-    return await this.accountModel.find();
+    const accounts = await this.accountModel.find();
+    accounts.forEach(account => {
+      account.password = undefined
+    });
+    return accounts;
   }
 
   async findRaw(filter: FilterQuery<AccountDocument>): Promise<Account[]> {
-    return await this.accountModel.find(filter);
+    const accounts = await this.accountModel.find(filter);
+    accounts.forEach(account => {
+      account.password = undefined
+    });
+    return accounts;
+  }
+
+  async findByUsername(value: string): Promise<Account[]> {
+    const accounts = await this.accountModel.find({ username: { $regex: value } })
+    accounts.forEach(account => {
+      account.password = undefined
+    });
+    return accounts;
   }
 
   async findOne(id: string): Promise<Account> {
-    return await this.accountModel.findById(id);
+    const account = await this.accountModel.findById(id);
+    account.password = undefined;
+    return account;
   }
 
   async findOneRaw(filter: FilterQuery<AccountDocument>): Promise<Account> {
-    return await this.accountModel.findOne(filter);
+    const account = await this.accountModel.findOne(filter);
+    account.password = undefined;
+    return account;
+
   }
 
   async update(
@@ -37,11 +60,15 @@ export class AccountService {
     updateAccountDto: UpdateAccountDto
   ): Promise<Account> {
     this.accountModel
-    return await this.accountModel.findByIdAndUpdate(id, updateAccountDto, { new: true });
+    const account = await this.accountModel.findByIdAndUpdate(id, updateAccountDto, { new: true });
+    account.password = undefined;
+    return account;
   }
 
   async updateRole(id: string, updateAccountDto: UpdateAccountDto): Promise<Account> {
-    return await this.accountModel.findByIdAndUpdate(id, { roles: updateAccountDto.roles }, { new: true });
+    const account = await this.accountModel.findByIdAndUpdate(id, { roles: updateAccountDto.roles }, { new: true });
+    account.password = undefined;
+    return account;
   }
 
   async delete(id: string): Promise<void> {

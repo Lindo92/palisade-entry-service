@@ -67,6 +67,29 @@ export class AccountsController {
   }
 
   @ApiOperation({
+    summary: 'Find Accounts by username',
+    description: 'This endpoint is used for finding all accounts that match supplied value with their username.',
+  })
+  @ApiResponse({
+    status: 200,
+    type: [Account],
+    description: `A successful response with an array of queried accounts.`,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Validation failed or something went wrong with the query. Please see error.',
+  })
+  @ApiBody({
+    description: 'Body must contain a value to match by.',
+    type: () => FindAccountRawDto
+  })
+  @UseGuards(RoleGuard(Role.Admin))
+  @Post("/find-username")
+  findByUsername(@Body() body: any): Promise<Account[]> {
+    return this.accountService.findByUsername(body.value);
+  }
+
+  @ApiOperation({
     summary: 'Find Account By Id',
     description: 'This endpoint is used for finding an account that matches supplied id.',
   })
