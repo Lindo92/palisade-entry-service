@@ -43,7 +43,13 @@ export class EntryController {
   })
   @UseGuards(RoleGuard(Role.User))
   @Post("/create")
-  create(@Body() CreateEntryDto: CreateEntryDto): Promise<Entry> {
+  create(
+    @Body() CreateEntryDto: CreateEntryDto,
+    @Req() request: RequestWithUser): Promise<Entry> {
+    CreateEntryDto = {
+      ...CreateEntryDto,
+      creatorAccountId: request.user._id
+    }
     return this.entryService.create(CreateEntryDto);
   }
 
@@ -159,7 +165,7 @@ export class EntryController {
   @UseGuards(RoleGuard(Role.User))
   @Patch('/update-your-entry')
   async updateYourOwn(
-    @Query() id: string,
+    @Query("id") id: string,
     @Body() updateEntryDto: UpdateEntryDto,
     @Req() request: RequestWithUser
   ): Promise<Entry> {
@@ -190,7 +196,7 @@ export class EntryController {
   @UseGuards(RoleGuard(Role.Developer))
   @Patch("/update")
   async update(
-    @Query() id: string,
+    @Query("id") id: string,
     @Body() updateEntryDto: UpdateEntryDto
   ): Promise<Entry> {
     return await this.entryService.update(id, updateEntryDto);
@@ -215,8 +221,8 @@ export class EntryController {
   })
   @UseGuards(RoleGuard(Role.Admin))
   @Delete("/delete")
-  async delete(@Query("id") id: string): Promise<unknown> {
-    return await this.entryService.delete(id);
+  async delete(@Query("id") id: string): Promise<void> {
+    await this.entryService.delete(id);
   }
 
 }

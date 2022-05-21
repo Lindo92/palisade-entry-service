@@ -36,15 +36,16 @@ export class AccountService {
     id: string,
     updateAccountDto: UpdateAccountDto
   ): Promise<Account> {
-    return await this.accountModel.findByIdAndUpdate(id, updateAccountDto);
+    this.accountModel
+    return await this.accountModel.findByIdAndUpdate(id, updateAccountDto, { new: true });
   }
 
   async updateRole(id: string, updateAccountDto: UpdateAccountDto): Promise<Account> {
-    return await this.accountModel.findByIdAndUpdate(id, { roles: updateAccountDto.roles });
+    return await this.accountModel.findByIdAndUpdate(id, { roles: updateAccountDto.roles }, { new: true });
   }
 
-  async delete(id: string): Promise<unknown> {
-    return await this.accountModel.findByIdAndDelete(id);
+  async delete(id: string): Promise<void> {
+    await this.accountModel.findByIdAndDelete(id);
   }
 
 }

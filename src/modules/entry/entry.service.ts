@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { ConsoleLogger, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { FilterQuery, Model } from "mongoose";
 import { Entry, EntryDocument } from "./entities/entry.entity";
@@ -32,49 +32,45 @@ export class EntryService {
   }
 
   async update(id: string, updateEntryDto: UpdateEntryDto): Promise<Entry> {
-    return await this.entryModel.findByIdAndUpdate(id, updateEntryDto);
+    return await this.entryModel.findByIdAndUpdate(id, updateEntryDto, { new: true });
   }
 
   async updateAssingedDevelopers(id: string, updateEntryDto: UpdateEntryDto): Promise<Entry> {
-    return await this.entryModel.findByIdAndUpdate(id, { assignedDeveloperIds: updateEntryDto.assignedDeveloperIds })
+    return await this.entryModel.findByIdAndUpdate(id, { assignedDeveloperIds: updateEntryDto.assignedDeveloperIds }, { new: true })
 
   }
-  async updateYourOwn(entryId: string, _id: string, updateEntryDto: UpdateEntryDto): Promise<any> {
-    const check = false;
-    const yourEntries: any = await this.findRaw({ creatorAccountId: _id });
+
+  async updateYourOwn(id: string, _id: string, updateEntryDto: UpdateEntryDto): Promise<Entry> {
     try {
-      yourEntries.forEach(entry => {
-        if (entry._id === entryId) {
-          return this.update(entryId, updateEntryDto)
-        }
-        else {
-          throw new HttpException('You can only update your own entries.', HttpStatus.BAD_REQUEST);
-        }
-      });
+      const entry = await this.entryModel.findById(id);
+      if (entry.creatorAccountId.toString() === _id.toString()) {
+        return await this.update(id, updateEntryDto);
+      } else {
+        throw new HttpException('You can only update your own entries.', HttpStatus.BAD_REQUEST)
+      }
     } catch (error) {
-      throw new HttpException('You do not have any created entries to update.', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Found no entries created by this account.', HttpStatus.NOT_FOUND);
     }
   }
 
-  async deleteYourOwn(entryId: string, _id: string): Promise<any> {
-    const check = false;
-    const yourEntries: any = await this.findRaw({ creatorAccountId: _id });
+
+
+
+  async deleteYourOwn(id: string, _id: string): Promise<void> {
     try {
-      yourEntries.forEach(entry => {
-        if (entry._id === entryId) {
-          return this.delete(entryId);
-        }
-        else {
-          throw new HttpException('You can only delete your own entries.', HttpStatus.BAD_REQUEST);
-        }
-      });
+      const entry = await this.entryModel.findById(id);
+      if (entry.creatorAccountId.toString() === _id.toString()) {
+        return await this.delete(id);
+      } else {
+        throw new HttpException('You can only delete your own entries.', HttpStatus.BAD_REQUEST)
+      }
     } catch (error) {
-      throw new HttpException('You do not have any created entries to delete.', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Found no entries created by this account.', HttpStatus.NOT_FOUND);
     }
   }
 
-  async delete(id: string): Promise<unknown> {
-    return await this.entryModel.findByIdAndDelete(id);
+  async delete(id: string): Promise<void> {
+    await this.entryModel.findByIdAndDelete(id);
   }
 
 }

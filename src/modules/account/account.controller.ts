@@ -189,8 +189,8 @@ export class AccountsController {
   })
   @UseGuards(RoleGuard(Role.Admin))
   @Delete("/delete")
-  async delete(@Query("id") id: string): Promise<unknown> {
-    return await this.accountService.delete(id);
+  async delete(@Query("id") id: string) {
+    await this.accountService.delete(id);
   }
 
 }
