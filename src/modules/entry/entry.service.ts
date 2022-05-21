@@ -1,4 +1,4 @@
-import { ConsoleLogger, HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { FilterQuery, Model } from "mongoose";
 import { Entry, EntryDocument } from "./entities/entry.entity";
@@ -21,6 +21,11 @@ export class EntryService {
 
   async findRaw(filter: FilterQuery<EntryDocument>): Promise<Entry[]> {
     return await this.entryModel.find(filter);
+  }
+
+  async findByTitle(value: string): Promise<Entry[]> {
+
+    return await this.entryModel.find({ title: { $regex: value } });
   }
 
   async findOne(id: string): Promise<Entry> {

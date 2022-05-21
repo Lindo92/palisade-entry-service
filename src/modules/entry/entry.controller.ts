@@ -90,9 +90,32 @@ export class EntryController {
     type: () => FindEntryRawDto
   })
   @UseGuards(RoleGuard(Role.User))
-  @Get("/find-raw")
+  @Post("/find-raw")
   findRaw(@Body() body: FindEntryRawDto): Promise<Entry[]> {
     return this.entryService.findRaw(body.filter);
+  }
+
+  @ApiOperation({
+    summary: 'Find Entries By Title, with regex',
+    description: 'This endpoint is used for finding all entries that match supplied title.',
+  })
+  @ApiResponse({
+    status: 200,
+    type: [Entry],
+    description: `A successful response with an array of queried entries.`,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Validation failed or something went wrong with the query, most likely the filter was constructed incorrectly, Please see error.',
+  })
+  @ApiBody({
+    description: 'Body must contain a value to match by.',
+    type: () => FindEntryRawDto
+  })
+  @UseGuards(RoleGuard(Role.User))
+  @Post("/find-title")
+  findByName(@Body() body: any): Promise<Entry[]> {
+    return this.entryService.findByTitle(body.value)
   }
 
   @ApiOperation({
@@ -136,7 +159,7 @@ export class EntryController {
     type: () => FindEntryRawDto
   })
   @UseGuards(RoleGuard(Role.User))
-  @Get("/find-one-raw")
+  @Post("/find-one-raw")
   async findOneRaw(@Body() body: FindEntryRawDto): Promise<Entry> {
     return await this.entryService.findOneRaw(body.filter);
   }
@@ -223,6 +246,30 @@ export class EntryController {
   @Delete("/delete")
   async delete(@Query("id") id: string): Promise<void> {
     await this.entryService.delete(id);
+  }
+
+  @ApiOperation({
+    summary: 'Delete Your Own Entry By Id',
+    description: 'This endpoint is used for deleting an entry that you own and that matches supplied id.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: `The delete query ran successfully.`,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Validation failed or something went wrong with the query, Please see error.',
+  })
+  @ApiQuery({
+    name: 'id',
+    description: 'the id of the entry to be deleted.'
+  })
+  @UseGuards(RoleGuard(Role.User))
+  @Delete("/delete-your-own")
+  async deleteYourOwn(
+    @Query("id") id: string,
+    @Req() request: RequestWithUser): Promise<void> {
+    await this.entryService.deleteYourOwn(id, request.user._id);
   }
 
 }

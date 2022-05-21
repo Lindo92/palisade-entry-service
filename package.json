@@ -39,6 +39,7 @@
     "apollo-server-express": "^3.6.7",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
+    "escape-string-regexp": "^5.0.0",
     "graphql": "^16.3.0",
     "joi": "^17.6.0",
     "mongoose": "^6.3.2",

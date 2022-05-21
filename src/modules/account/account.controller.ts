@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Patch,
+  Post,
   Query,
   Req,
   UseGuards,
@@ -60,7 +61,7 @@ export class AccountsController {
     type: () => FindAccountRawDto
   })
   @UseGuards(RoleGuard(Role.Admin))
-  @Get("/find-raw")
+  @Post("/find-raw")
   findRaw(@Body() body: FindAccountRawDto): Promise<Account[]> {
     return this.accountService.findRaw(body.filter);
   }
@@ -106,7 +107,7 @@ export class AccountsController {
     type: () => FindAccountRawDto
   })
   @UseGuards(RoleGuard(Role.Admin))
-  @Get("/find-one-raw")
+  @Post("/find-one-raw")
   async findOneRaw(@Body() body: FindAccountRawDto): Promise<Account> {
     return await this.accountService.findOneRaw(body.filter);
   }
@@ -191,6 +192,28 @@ export class AccountsController {
   @Delete("/delete")
   async delete(@Query("id") id: string) {
     await this.accountService.delete(id);
+  }
+
+  @ApiOperation({
+    summary: 'Delete Your Ownd Account By Id',
+    description: 'This endpoint is used for deleting your account.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: `The delete query ran successfully.`,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Validation failed or something went wrong with the query, Please see error.',
+  })
+  @ApiQuery({
+    name: 'id',
+    description: 'the id of the account to be deleted.'
+  })
+  @UseGuards(RoleGuard(Role.User))
+  @Delete("/delete-your-account")
+  async deleteYourOwn(@Req() request: RequestWithUser,) {
+    await this.accountService.delete(request.user._id);
   }
 
 }
