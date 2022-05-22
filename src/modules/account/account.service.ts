@@ -28,29 +28,21 @@ export class AccountService {
 
   async findRaw(filter: FilterQuery<AccountDocument>): Promise<Account[]> {
     const accounts = await this.accountModel.find(filter);
-    accounts.forEach(account => {
-      account.password = undefined
-    });
     return accounts;
   }
 
   async findByUsername(value: string): Promise<Account[]> {
     const accounts = await this.accountModel.find({ username: { $regex: value } })
-    accounts.forEach(account => {
-      account.password = undefined
-    });
     return accounts;
   }
 
   async findOne(id: string): Promise<Account> {
     const account = await this.accountModel.findById(id);
-    account.password = undefined;
     return account;
   }
 
   async findOneRaw(filter: FilterQuery<AccountDocument>): Promise<Account> {
     const account = await this.accountModel.findOne(filter);
-    account.password = undefined;
     return account;
 
   }
@@ -61,13 +53,11 @@ export class AccountService {
   ): Promise<Account> {
     this.accountModel
     const account = await this.accountModel.findByIdAndUpdate(id, updateAccountDto, { new: true });
-    account.password = undefined;
     return account;
   }
 
   async updateRole(id: string, updateAccountDto: UpdateAccountDto): Promise<Account> {
     const account = await this.accountModel.findByIdAndUpdate(id, { roles: updateAccountDto.roles }, { new: true });
-    account.password = undefined;
     return account;
   }
 

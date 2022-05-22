@@ -39,8 +39,12 @@ export class AccountsController {
   })
   @UseGuards(RoleGuard(Role.Admin))
   @Get("/find")
-  find(): Promise<Account[]> {
-    return this.accountService.find();
+  async find(): Promise<Account[]> {
+    const accounts = await this.accountService.find();
+    accounts.forEach(account => {
+      account.password = undefined
+    });
+    return accounts;
   }
 
   @ApiOperation({
@@ -62,8 +66,12 @@ export class AccountsController {
   })
   @UseGuards(RoleGuard(Role.Admin))
   @Post("/find-raw")
-  findRaw(@Body() body: FindAccountRawDto): Promise<Account[]> {
-    return this.accountService.findRaw(body.filter);
+  async findRaw(@Body() body: FindAccountRawDto): Promise<Account[]> {
+    const accounts = await this.accountService.findRaw(body.filter);
+    accounts.forEach(account => {
+      account.password = undefined
+    });
+    return accounts;
   }
 
   @ApiOperation({
@@ -85,8 +93,12 @@ export class AccountsController {
   })
   @UseGuards(RoleGuard(Role.Admin))
   @Post("/find-username")
-  findByUsername(@Body() body: any): Promise<Account[]> {
-    return this.accountService.findByUsername(body.value);
+  async findByUsername(@Body() body: any): Promise<Account[]> {
+    const accounts = await this.accountService.findByUsername(body.value);
+    accounts.forEach(account => {
+      account.password = undefined
+    });
+    return accounts;
   }
 
   @ApiOperation({
@@ -108,8 +120,10 @@ export class AccountsController {
   })
   @UseGuards(RoleGuard(Role.Admin))
   @Get("/find-one")
-  findOne(@Query("id") id: string): Promise<Account> {
-    return this.accountService.findOne(id);
+  async findOne(@Query("id") id: string): Promise<Account> {
+    const account = await this.accountService.findOne(id);
+    account.password = undefined;
+    return account;
   }
 
   @ApiOperation({
@@ -132,7 +146,9 @@ export class AccountsController {
   @UseGuards(RoleGuard(Role.Admin))
   @Post("/find-one-raw")
   async findOneRaw(@Body() body: FindAccountRawDto): Promise<Account> {
-    return await this.accountService.findOneRaw(body.filter);
+    const account = await this.accountService.findOneRaw(body.filter);
+    account.password = undefined;
+    return account;
   }
 
   @ApiOperation({
@@ -162,7 +178,9 @@ export class AccountsController {
     @Query("id") id: string,
     @Body() updateAccountDto: UpdateAccountDto
   ): Promise<Account> {
-    return await this.accountService.updateRole(id, updateAccountDto);
+    const account = await this.accountService.updateRole(id, updateAccountDto);
+    account.password = undefined;
+    return account;
   }
 
   @ApiOperation({
@@ -192,7 +210,9 @@ export class AccountsController {
     @Req() request: RequestWithUser,
     @Body() updateAccountDto: UpdateAccountDto
   ): Promise<Account> {
-    return await this.accountService.update(request.user._id, updateAccountDto);
+    const account = await this.accountService.update(request.user._id, updateAccountDto);
+    account.password = undefined;
+    return account;
   }
 
   @ApiOperation({

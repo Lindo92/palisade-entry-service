@@ -28,9 +28,9 @@ export class AuthenticationService {
   }
 
   public async getAuthenticatedAccount(username: string, plainTextPassword: string) {
-    console.log(username, plainTextPassword);
     try {
       const account = await this.accountService.findOneRaw({ username: username });
+      console.log(account);
       await this.verifyPassword(plainTextPassword, account.password);
       account.password = undefined;
       return account;
