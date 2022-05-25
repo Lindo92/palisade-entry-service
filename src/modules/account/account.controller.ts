@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Patch,
   Post,
   Query,
@@ -64,6 +65,7 @@ export class AccountsController {
     description: 'Body must contain a filter object with the key one wants to find accounts by and the value.',
     type: () => FindAccountRawDto
   })
+  @HttpCode(200)
   @UseGuards(RoleGuard(Role.Admin))
   @Post("/find-raw")
   async findRaw(@Body() body: FindAccountRawDto): Promise<Account[]> {
@@ -91,6 +93,7 @@ export class AccountsController {
     description: 'Body must contain a value to match by.',
     type: () => FindAccountRawDto
   })
+  @HttpCode(200)
   @UseGuards(RoleGuard(Role.Admin))
   @Post("/find-username")
   async findByUsername(@Body() body: any): Promise<Account[]> {
@@ -143,6 +146,7 @@ export class AccountsController {
     description: 'Body must contain a filter object with the key one wants to find accounts by and the value.',
     type: () => FindAccountRawDto
   })
+  @HttpCode(200)
   @UseGuards(RoleGuard(Role.Admin))
   @Post("/find-one-raw")
   async findOneRaw(@Body() body: FindAccountRawDto): Promise<Account> {

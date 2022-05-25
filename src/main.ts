@@ -10,8 +10,8 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Palisade')
-    .setDescription('The Palisade API, contains protected REST CRUD endpoints for easy consumption.')
-    .setVersion('1.0')
+    .setDescription('The Palisade API, Your Wall against the encroaching bugs.')
+    .setVersion('1.5')
     .build()
 
   const document = SwaggerModule.createDocument(app, config);

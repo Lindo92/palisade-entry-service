@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Patch,
   Post,
   Query,
@@ -89,6 +90,7 @@ export class EntryController {
     description: 'Body must contain a filter object with the key one wants to find entries by and the value.',
     type: () => FindEntryRawDto
   })
+  @HttpCode(200)
   @UseGuards(RoleGuard(Role.User))
   @Post("/find-raw")
   findRaw(@Body() body: FindEntryRawDto): Promise<Entry[]> {
@@ -112,6 +114,7 @@ export class EntryController {
     description: 'Body must contain a value to match by.',
     type: () => FindEntryRawDto
   })
+  @HttpCode(200)
   @UseGuards(RoleGuard(Role.User))
   @Post("/find-title")
   findByName(@Body() body: any): Promise<Entry[]> {
@@ -158,6 +161,7 @@ export class EntryController {
     description: 'Body must contain a filter object with the key one wants to find entries by and the value.',
     type: () => FindEntryRawDto
   })
+  @HttpCode(200)
   @UseGuards(RoleGuard(Role.User))
   @Post("/find-one-raw")
   async findOneRaw(@Body() body: FindEntryRawDto): Promise<Entry> {
